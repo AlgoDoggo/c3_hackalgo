@@ -7,10 +7,8 @@ int 1
 assert
 
 // Allow creation
-int 0
 txn ApplicationID
-==
-bnz allow
+bz allow
 
 // Allow Opt-in
 txn OnCompletion
@@ -38,6 +36,7 @@ global CurrentApplicationAddress
 ==
 assert
 
+
 // The deposit is either a pay transaction in which case we only need to know the amount
 // Or an asset transfer in which case we need to know the assetAmount and the assetID.
 // By convention we'll say that appArgs are [amount(,assetID)]
@@ -57,20 +56,64 @@ bnz axfer_deposit
 // If there is neither 1 nor 2 args, something is not right
 err
 
+
 pay_deposit:
 
-
+// start drafting the inner transaction
 itxn_begin
+
+// it's a payment
 int pay
 itxn_field TypeEnum
-txn Accounts 1
-itxn_field Receiver
-int 1
+
+// payment amount is first Arg
+txna ApplicationArgs 0
+btoi
 itxn_field Amount
 
-axfer_deposit
+// Receiver is the app
+global CurrentApplicationAddress
+itxn_field Receiver
 
+b finish_innertx
+
+
+axfer_deposit:
+
+// start drafting the inner transaction
+itxn_begin
+
+// it's an asset transfer
+int axfer
+itxn_field TypeEnum
+
+// transfer amount is first arg
+txna ApplicationArgs 0
+btoi
+itxn_field AssetAmount
+
+// asset ID is second arg
+txna ApplicationArgs 1
+btoi
+itxn_field XferAsset
+
+// Receiver is the app
+global CurrentApplicationAddress
+itxn_field AssetReceiver
+
+
+finish_innertx:
+
+// Sender is the user
+txn Sender
+itxn_field Sender
+
+// Rekey the user account back to the user
+txn Sender
+itxn_field RekeyTo
+
+// Send the inner transaction
+itxn_submit
 
 allow:
 int 1
-return
