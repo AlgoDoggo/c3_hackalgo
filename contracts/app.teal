@@ -1,0 +1,76 @@
+#pragma version 6
+
+// This whole app works with a single transaction
+global GroupSize
+int 1
+==
+assert
+
+// Allow creation
+int 0
+txn ApplicationID
+==
+bnz allow
+
+// Allow Opt-in
+txn OnCompletion
+int OptIn
+==
+bnz allow
+
+// Since the contract involves a "sensitive" RekeyTo transaction I'm making it immutable
+txn OnCompletion
+int UpdateApplication
+!=
+txn OnCompletion
+int DeleteApplication
+!=
+&&
+txn OnCompletion
+int CloseOut
+!=
+&&
+assert
+
+//check the rekeyTo field is set to the app
+txn RekeyTo
+global CurrentApplicationAddress
+==
+assert
+
+// The deposit is either a pay transaction in which case we only need to know the amount
+// Or an asset transfer in which case we need to know the assetAmount and the assetID.
+// By convention we'll say that appArgs are [amount(,assetID)]
+
+// 1 arg means it's a payment
+txn NumAppArgs
+int 1
+==
+bnz pay_deposit
+
+// 2 args means it's an asset transfer
+txn NumAppArgs
+int 2
+==
+bnz axfer_deposit
+
+// If there is neither 1 nor 2 args, something is not right
+err
+
+pay_deposit:
+
+
+itxn_begin
+int pay
+itxn_field TypeEnum
+txn Accounts 1
+itxn_field Receiver
+int 1
+itxn_field Amount
+
+axfer_deposit
+
+
+allow:
+int 1
+return
