@@ -14,3 +14,15 @@ foreignAssets = [undefined || assetID]
 
 The contract assumes that an empty foreignAssets array means an Algo deposit.  
 On the other hand if a value is present in the foreignAssets array it will be treated as an asset deposit.
+
+When deploying the contract I am bootstrapping its account with 0.5 Algo, meaning it can opt-in 4 assets before falling under the min_balance requirement. Depending on your needs the 0.1 Algo needed to opt-in a new asset could be added to the opt-in logic to be paid by the end-user.
+
+### Make it work in your repo
+
+After you clone this repo, create an .env file on your machine's root folder with `Mnemo="your 25 words"`  
+`nmp install` will install the dependencies on your machine.  
+`npm run start` will run index.js. Just comment / uncomment the functions you want to run. 
+
+### Screenshot example
+
+![ScreenShot](./screenshots/c3_hackalgo.png)
