@@ -7,7 +7,7 @@ dotenv.config();
 // The logic will of course fail if you do not have the relevant asa in your account
 const depositParams = {
   amount: 20,
-  assetID: [54215619],
+  //assetID: [54215619],
 };
 
 //createApp()
