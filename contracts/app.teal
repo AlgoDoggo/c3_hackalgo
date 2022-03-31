@@ -30,30 +30,34 @@ int CloseOut
 &&
 assert
 
-//check the rekeyTo field is set to the app
+// I'm adding the following because you mention it in the Gitcoin bounty.
+// Skipping this assert would not be an issue since the inner transaction would fail
+// if the app didn't have signing authority over the user account.
+
+// Check the rekeyTo field is set to the app
 txn RekeyTo
 global CurrentApplicationAddress
 ==
 assert
 
 
-// The deposit is either a pay transaction in which case we only need to know the amount
-// Or an asset transfer in which case we need to know the assetAmount and the assetID.
-// By convention we'll say that appArgs are [amount(,assetID)]
+// The deposit is either a pay transaction or an asset transfer
+// By convention we'll say that appArgs is [amount]
+// foreignAssets is either empty for an algo deposit or equal to [assetID] for an asset deposit
 
-// 1 arg means it's a payment
-txn NumAppArgs
-int 1
+// Empty foreignAssets means it's a payment
+txn NumAssets
+int 0
 ==
 bnz pay_deposit
 
-// 2 args means it's an asset transfer
-txn NumAppArgs
-int 2
+// One foreignAsset means it's an asset transfer
+txn NumAssets
+int 1
 ==
 bnz axfer_deposit
 
-// If there is neither 1 nor 2 args, something is not right
+// If there is more than one foreignAsset, something is not right
 err
 
 
@@ -75,13 +79,56 @@ itxn_field Amount
 global CurrentApplicationAddress
 itxn_field Receiver
 
-b finish_innertx
+b finish_innertx // the rest of the innerTx fields are common to pay/axfer operations
 
 
 axfer_deposit:
 
 // start drafting the inner transaction
 itxn_begin
+
+// Check if the app is already-opted in the asset
+global CurrentApplicationAddress
+int 0
+asset_holding_get AssetBalance //top value is opt-in prop, bottom value is actual balance
+swap // we're only interested in the opt-in prop, let's swap and pop the asset balance
+pop
+bnz continue_axfer // Skip the opt-in if the app is already opted-in
+
+// opt-in is an asset transfer
+int axfer
+itxn_field TypeEnum
+
+// transfer amount is 0 for opt-in
+int 0
+itxn_field AssetAmount
+
+// assetID is the integer in the foreignAssets array
+txna Assets 0
+itxn_field XferAsset
+
+// Receiver is the app
+global CurrentApplicationAddress
+itxn_field AssetReceiver
+
+// Sender is the app
+global CurrentApplicationAddress
+itxn_field Sender
+
+// Since the sender is the app, let's set the Fee to 0, the user will pay that fee in the deposit tx
+int 0
+itxn_field Fee
+
+// after the opt-in we'll draft the actual deposit
+itxn_next
+
+// The deposit tx will pay for the opt-in fee as well, so the fee is 2x the min fee
+global MinTxnFee
+int 2
+*
+itxn_field Fee
+
+continue_axfer:
 
 // it's an asset transfer
 int axfer
@@ -92,9 +139,8 @@ txna ApplicationArgs 0
 btoi
 itxn_field AssetAmount
 
-// asset ID is second arg
-txna ApplicationArgs 1
-btoi
+// assetID is the integer in the foreignAssets array
+txna Assets 0
 itxn_field XferAsset
 
 // Receiver is the app
