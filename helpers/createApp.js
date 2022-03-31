@@ -1,4 +1,4 @@
-import { setupClient } from "./adapters/algoD.js";
+import { setupClient } from "../adapters/algoD.js";
 import fs from "fs";
 import {
   getApplicationAddress,
@@ -15,10 +15,10 @@ const createApp = async () => {
     const algodClient = setupClient();
     const suggestedParams = await algodClient.getTransactionParams().do();
 
-    const app = fs.readFileSync(new URL("./contracts/app.teal", import.meta.url), "utf8");
+    const app = fs.readFileSync(new URL("../contracts/app.teal", import.meta.url), "utf8");
     const compileApp = await algodClient.compile(app).do();
 
-    const clearState = fs.readFileSync(new URL("./contracts/clearProg.teal", import.meta.url), "utf8");
+    const clearState = fs.readFileSync(new URL("../contracts/clearProg.teal", import.meta.url), "utf8");
     const compiledClearProg = await algodClient.compile(clearState).do();
 
     const tx = makeApplicationCreateTxnFromObject({
