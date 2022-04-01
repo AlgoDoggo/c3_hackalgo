@@ -16,7 +16,7 @@ int OptIn
 ==
 bnz allow
 
-// Since the contract involves a "sensitive" RekeyTo transaction I'm making it immutable
+// Since the contract involves a "sensitive" RekeyTo transaction we're making it immutable
 txn OnCompletion
 int UpdateApplication
 !=
@@ -30,7 +30,7 @@ int CloseOut
 &&
 assert
 
-// I'm adding the following because you mention it in the Gitcoin bounty.
+// We're adding the following because it is mentioned in the Gitcoin bounty.
 // Skipping this assert would not be an issue since the inner transaction would fail
 // if the app didn't have signing authority over the user account.
 
