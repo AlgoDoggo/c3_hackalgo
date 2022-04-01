@@ -1,5 +1,5 @@
 import dotenv from "dotenv";
-import makeDeposit from "./helpers/makeDeposit.js";
+import makeDeposit from "./example/makeDeposit.js";
 dotenv.config();
 
 // Comment or uncomment the assetID depending on whether you want to deposit algo or asa

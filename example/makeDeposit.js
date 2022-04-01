@@ -9,8 +9,8 @@ const makeDeposit = async ({ amount, assetID }) => {
     let suggestedParams = await algodClient.getTransactionParams().do();
 
     const appAddr = getApplicationAddress(appIndex);
-    
     const appArgs = [encodeUint64(amount)];
+
     const depositAlgo = makeApplicationNoOpTxnFromObject({
       suggestedParams,
       from: account.addr,

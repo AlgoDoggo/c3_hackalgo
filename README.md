@@ -22,7 +22,7 @@ Depending on your needs the 0.1 Algo needed to opt-in a new asset could be added
 
 After you clone this repo, create an .env file in your repo's root folder with `Mnemo="your 25 words"`  
 `nmp install` will install the dependencies in your folder.  
-`npm run start` will run index.js. Just comment / uncomment the functions you want to run.
+`npm run start` will run index.js and the example.
 
 If you want to deploy your own app just run `npm run create-app` then copy the appID that will show in the console in ./constants/appIndex
 

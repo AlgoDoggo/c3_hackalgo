@@ -10,7 +10,7 @@ assert
 txn ApplicationID
 bz allow
 
-// Allow Opt-in
+// Allow Opt-in. Here we are not setting anything in local state so user opt-in is not necessary.
 txn OnCompletion
 int OptIn
 ==
