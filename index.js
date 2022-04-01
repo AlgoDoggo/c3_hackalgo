@@ -1,5 +1,4 @@
 import dotenv from "dotenv";
-import createApp from "./helpers/createApp.js";
 import makeDeposit from "./helpers/makeDeposit.js";
 dotenv.config();
 
@@ -10,5 +9,4 @@ const depositParams = {
   //assetID: [54215619],
 };
 
-//createApp()
 makeDeposit(depositParams)

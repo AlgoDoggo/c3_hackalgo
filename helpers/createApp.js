@@ -8,6 +8,8 @@ import {
   OnApplicationComplete,
   waitForConfirmation,
 } from "algosdk";
+import dotenv from "dotenv";
+dotenv.config();
 
 const createApp = async () => {
   try {
@@ -54,4 +56,4 @@ const createApp = async () => {
   }
 };
 
-export default createApp;
+createApp();

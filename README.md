@@ -10,7 +10,7 @@ The contract is able to withdraw Algos or ASA from the sender account as well as
 
 The structure of the app call is as follows:  
 appArgs = [ amount ]  
-foreignAssets = undefined || [ assetID ]  
+foreignAssets = undefined || [ assetID ]
 
 The contract assumes that an empty foreignAssets array means an Algo deposit.  
 On the other hand if a foreignAsset is present in the array the contract will treat this as an asset deposit.
@@ -24,7 +24,7 @@ After you clone this repo, create an .env file in your repo's root folder with `
 `nmp install` will install the dependencies in your folder.  
 `npm run start` will run index.js. Just comment / uncomment the functions you want to run.
 
-If you want to deploy your own app just run createApp then copy the appID that will show in the console in ./constants/appIndex
+If you want to deploy your own app just run `npm run create-app` then copy the appID that will show in the console in ./constants/appIndex
 
 ### Screenshot example
 
