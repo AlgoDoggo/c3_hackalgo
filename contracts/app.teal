@@ -10,12 +10,6 @@ assert
 txn ApplicationID
 bz allow
 
-// Allow Opt-in. Here we are not setting anything in local state so user opt-in is not necessary.
-txn OnCompletion
-int OptIn
-==
-bnz allow
-
 // Since the contract involves a "sensitive" RekeyTo transaction we're making it immutable
 txn OnCompletion
 int UpdateApplication

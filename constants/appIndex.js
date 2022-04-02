@@ -1,1 +1,1 @@
-export const appIndex = 81346489
+export const appIndex = 81680417
