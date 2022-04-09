@@ -9,4 +9,4 @@ const depositParams = {
   //assetID: [54215619],
 };
 
-makeDeposit(depositParams)
+makeDeposit(depositParams).catch((err) => console.error(err.message));
