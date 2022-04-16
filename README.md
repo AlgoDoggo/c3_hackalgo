@@ -24,7 +24,7 @@ After you clone this repo, create an .env file in your repo's root folder with `
 `nmp install` will install the dependencies in your folder.  
 `npm run start` will run index.js and the example.
 
-If you want to deploy your own app just run `npm run create-app` then copy the appID that will show in the console in ./constants/appIndex
+If you want to deploy your own app run `npm run create-app` then copy the appID that will show in the console in ./constants/appIndex
 
 ### Screenshot example
 
